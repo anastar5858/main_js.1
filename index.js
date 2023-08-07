@@ -9,7 +9,6 @@ const initiateGame = (function () {
             mainGame()
             return
         }
-        console.log('ummm', userDevice)
         // iife scope variables
         const validChoices = ['rock', 'paper', 'scissors'];
         const choiceWinnerMap = {paper: 'scissors', scissors: 'rock', rock: 'paper'};
