@@ -53,7 +53,10 @@ const initiateGame = (function () {
         const playGame = () => {
             const userChoice = prompt('Choose your option (Rock, Paper, Scissors).')?.toLowerCase();
             if (!userChoice) displayMessage(interfaceMessages.cannotForfeit)
-            if (!validChoices.includes(userChoice)) return playGame();
+            if (!validChoices.includes(userChoice)) {
+                displayMessage(`Unknown option!!!`);
+                return playGame();
+            } 
             const computerChoice = computerRandomChoice();
             // set scores
             if (userChoice === computerChoice) {
