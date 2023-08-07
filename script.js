@@ -63,7 +63,7 @@ function scoreSystem(userChoice, computerChoice) {
 
 //Game loop
 
-while (userScore < 5 && computerScore < 5) {
+while (userScore < 5 || computerScore < 5) {
   const userChoice = userInput();
   const computerChoice = computerInputConvert();
 
