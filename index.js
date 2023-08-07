@@ -1,9 +1,15 @@
 // declare iife to protect the scope
 const initiateGame = (function () {
     // first ask users for device (mobile / phones)
-    const userDevice = prompt(`Are you on a phone or laptop?`)?.toLowerCase();
+    let userDevice = prompt(`Are you on a phone or laptop?`)?.toLowerCase();
     let askedIndicator = false;
     return mainGame = () => {
+        if (userDevice !== 'laptop' && userDevice !== 'phone') {
+            userDevice = prompt(`Are you on a phone or laptop?`)?.toLowerCase();
+            mainGame()
+            return
+        }
+        console.log('ummm', userDevice)
         // iife scope variables
         const validChoices = ['rock', 'paper', 'scissors'];
         const choiceWinnerMap = {paper: 'scissors', scissors: 'rock', rock: 'paper'};
@@ -46,7 +52,7 @@ const initiateGame = (function () {
             initiateGame();
         };
         const playGame = () => {
-            const userChoice = prompt('Choose your option')?.toLowerCase();
+            const userChoice = prompt('Choose your option (Rock, Paper, Scissors).')?.toLowerCase();
             if (!userChoice) displayMessage(interfaceMessages.cannotForfeit)
             if (!validChoices.includes(userChoice)) return playGame();
             const computerChoice = computerRandomChoice();
