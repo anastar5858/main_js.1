@@ -51,12 +51,26 @@ const initiateGame = (function () {
             initiateGame();
         };
         const playGame = () => {
-            const userChoice = prompt('Choose your option (Rock, Paper, Scissors).')?.toLowerCase();
-            if (!userChoice) displayMessage(interfaceMessages.cannotForfeit)
+            let userChoice = prompt('Choose your option (Rock, Paper, Scissors).')?.toLowerCase();
+            if (!userChoice) {
+                displayMessage(interfaceMessages.cannotForfeit);
+                const quit = confirm(`Unless you really want to quit :( don't make the AI cry.` +
+                `You'll have to reload or manually restart haha`);
+                if (quit) return;
+            }
             if (!validChoices.includes(userChoice)) {
-                displayMessage(`Unknown option!!!`);
-                return playGame();
-            } 
+                if (userChoice === undefined) return playGame();
+                // instead try to correct
+                // if one of the strings have a levenshtein distance of 2 or less with
+                // one of the options confirm it with the user and assign it
+                const potentialOption = validChoices.filter((choice) => calculateLevenshteinDistance(choice, userChoice) < 2)[0];
+                const confirmation = confirm(`I think you meant ${potentialOption} correct`);
+                if (confirmation) userChoice = potentialOption;
+                if (!confirmation) {
+                    displayMessage(`Unknown option!!!`);
+                    return playGame();
+                }
+            }
             const computerChoice = computerRandomChoice();
             // set scores
             if (userChoice === computerChoice) {
