@@ -4,8 +4,7 @@ const initGame = () =>{
     let count = 1;
     const choices = ["rock","paper","scissors"]
     // computer play by using math random
-    const computerPlay = () =>{
-        
+    const computerPlay = () =>{    
         randomNumber = Math.floor(Math.random() * choices.length)
         return choices[randomNumber]
     }
@@ -48,8 +47,9 @@ const initGame = () =>{
         var response = window.prompt("Please enter your choice of ROCK, PAPER, SCISSORS, or EXIT to stop game");
         //if statement to handle null return value when user press without enter value
         if (response === null){
-            return response
+            return count = 6;
         } else if(response === ""){
+            alert("Please input the right format")
         } else{
             if(response.toLowerCase() === "exit") {
                 count = 6;
