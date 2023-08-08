@@ -7,7 +7,7 @@ const game = (function () {
   
     function findSimilar(userInput) {
       const options = ['rock', 'paper', 'scissors'];
-  
+
       for (const option of options) {
         let matchingChars = 0;
         for (let i = 0; i < userInput.length; i++) {
@@ -72,7 +72,7 @@ const game = (function () {
       console.log("Get 5 score and finish the game.");
   
       while (round < 6) {
-        const playerSelection = prompt(
+        let playerSelection = prompt(
           `Round ${round}: Enter your choice: Rock, Paper, or Scissors`
         );
         if (playerSelection === null) {
@@ -82,7 +82,7 @@ const game = (function () {
           break;
         }
         const computerSelection = computerPlay();
-        const result = playRound(playerSelection, computerSelection);
+        let result = playRound(playerSelection, computerSelection);
   
         console.log(result.message);
   
@@ -96,13 +96,14 @@ const game = (function () {
           const similarChoiceConfirmation = confirm(result.message);
           if (similarChoiceConfirmation) {
             const correctedChoice = result.correctedChoice;
+            playerSelection = correctedChoice
             if (correctedChoice) {
-              const correctedResult = playRound(correctedChoice, computerSelection);
-              console.log(correctedResult.message);
-              if (correctedResult.message.includes("win")) {
+              result = playRound(correctedChoice, computerSelection);
+              console.log(result.message);
+              if (result.message.includes("win")) {
                 playerScore++;
                 round++;
-              } else if (correctedResult.message.includes("lose")) {
+              } else if (result.message.includes("lose")) {
                 computerScore++;
                 round++;
               }
