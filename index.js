@@ -1,4 +1,4 @@
-const gameResult = (function () {
+const game = (function () {
   function computerPlay() {
     const choices = ["Rock", "Paper", "Scissors"];
     const randomIndex = Math.floor(Math.random() * choices.length);
@@ -19,7 +19,10 @@ const gameResult = (function () {
       return "It's a tie!";
     } else if (winner[playerChoice] === computerChoice) {
       return `Congrats, you win! ${playerSelection} beats ${computerSelection}`;
-    } else {
+    } else if (!winner[playerChoice]) {
+      return "Did you make typo mistake? Please type valid choices (Rock, Paper, Scissors)"  
+    } 
+    else {
       return `Sorry :( You lose! ${computerSelection} beats ${playerSelection}`;
     }
   }
@@ -32,7 +35,7 @@ const gameResult = (function () {
     }
   }
 
-  function game() {
+  function mainGame() {
     let playerScore = 0;
     let computerScore = 0;
     let round = 1;
@@ -44,7 +47,7 @@ const gameResult = (function () {
       );
       if (playerSelection === null) {
         console.log(
-          "Game has been canceled by the user. To start the game please call the function from console or refresh the page."
+          "Game has been canceled by the user. To start the game please call the game function from console or refresh the page."
         );
         break;
       }
@@ -71,7 +74,7 @@ const gameResult = (function () {
       console.log(finalResult(playerScore, computerScore));
     }
   }
-  return game;
+  return mainGame;
 })();
 
-gameResult();
+game();
