@@ -64,9 +64,12 @@ const initiateGame = (function () {
                 // if one of the strings have a levenshtein distance of 2 or less with
                 // one of the options confirm it with the user and assign it
                 const potentialOption = validChoices.filter((choice) => calculateLevenshteinDistance(choice, userChoice) < 2)[0];
-                const confirmation = confirm(`I think you meant ${potentialOption} correct`);
-                if (confirmation) userChoice = potentialOption;
-                if (!confirmation) {
+                let confirmation;
+                if (potentialOption !== undefined ) {
+                    confirmation = confirm(`I think you meant ${potentialOption} correct`);
+                    if (confirmation) userChoice = potentialOption;
+                }
+                if (!confirmation || potentialOption === undefined) {
                     displayMessage(`Unknown option!!!`);
                     return playGame();
                 }
