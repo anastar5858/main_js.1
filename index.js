@@ -1,16 +1,39 @@
-// declare iife to protect the scope
 const initiateGame = (function () {
-    // first ask users for device (mobile / phones)
-    let userDevice = prompt(`Are you on a phone or laptop?`)?.toLowerCase();
+    let userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase();
     let askedIndicator = false;
+    // https://dirask.com/posts/JavaScript-calculate-Levenshtein-distance-between-strings-pJ3krj
+    const calculateLevenshteinDistance = (a, b) => {
+        const aLimit = a.length + 1;
+        const bLimit = b.length + 1;
+        const distance = Array(aLimit);
+        for (let i = 0; i < aLimit; ++i) {
+            distance[i] = Array(bLimit);
+        }
+        for (let i = 0; i < aLimit; ++i) {
+            distance[i][0] = i;
+        }
+        for (let j = 0; j < bLimit; ++j) {
+            distance[0][j] = j;
+        }
+        for (let i = 1; i < aLimit; ++i) {
+            for (let j = 1; j <  bLimit; ++j) {
+                const substitutionCost = (a[i - 1] === b[j - 1] ? 0 : 1);
+                distance[i][j] = Math.min(
+                    distance[i - 1][j] + 1, // deletion
+                    distance[i][j - 1] + 1, // insertion
+                    distance[i - 1][j - 1] + substitutionCost // substitute
+                );
+            }
+        }
+        return distance[a.length][b.length];
+    };
     return mainGame = () => {
-        if (userDevice !== 'laptop' && userDevice !== 'phone') {
-            userDevice = prompt(`Are you on a phone or laptop?`)?.toLowerCase();
+        if ((userDevice !== 'laptop' && userDevice !== 'l') && (userDevice !== 'phone' && userDevice !== 'p')) {
+            userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase();
             mainGame()
             return
         }
-        // iife scope variables
-        const validChoices = ['rock', 'paper', 'scissors'];
+        const validChoices = ['rock', 'paper', 'scissors', 'r', 'p', 's'];
         const choiceWinnerMap = {paper: 'scissors', scissors: 'rock', rock: 'paper'};
         const scores = {computer: 0, player: 0};
         const interfaceMessages = {
@@ -23,27 +46,25 @@ const initiateGame = (function () {
             requestGame: 'Wanna play a game of Rock, Paper, Scissors with an intelligent Evil AI for 5 score rounds?',
             initiateGameInstruction: 'You can always try to conquer me by typing initiateGame() in your console.'
         };
-        // hoisting functions in the iife scope
         const laptopInstructionsProvider = () => {
-                // provide instructions to open the console
-                alert(`You have to use the console to check for results I'm so evil.`);
-                alert(`You can use the following options to open the console tada!`);
-                alert(`Click the three-dot icon in the top right corner of the browser window.
-                \nFrom there, choose More Tools > Developer Tools.\nnavigate to the console tab.`);
-                alert(`Press (Option+Command+i) on mac or (Ctrl+Shift+I) on Windows to` +
-                ` open the developer tools and navigate to console tab.`);
-                alert(`Enter the command 'initiateGame()'`);
+                alert(`You have to use the console to check for results I'm so evil.\n\n`
+                + `You can use any of the following options to open the console tada! sometimes i'm nice:\n`
+                + `\t1. Click the three-dot icon in the top right corner of the browser window.`
+                + `From there, choose More Tools > Developer Tools. navigate to the console tab.\n`
+                + `\t2. Press (Option+Command+i) on mac or (Ctrl+Shift+I) on Windows to` +
+                ` open the developer tools and navigate to console tab.\n\n`
+                + `Finally enter the command 'initiateGame()' ahh lot of steps`);
                 askedIndicator = true;
                 return
         }
         const computerRandomChoice = () => validChoices[Math.floor(Math.random() * validChoices.length)];
-        const displayMessage = (message) => userDevice === 'laptop' ? console.log(message) : alert(message);
+        const displayMessage = (message) => userDevice === 'laptop' || userDevice === 'l' ? console.log(message) : alert(message);
         const updateScores = (winner) => scores[winner]++;
         const displayChoices = (computerChoice, playerChoice) => {
-            userDevice === 'laptop' ? console.log(`Choices:\nComputer: ${computerChoice}\nPlayer: ${playerChoice}`)
+            userDevice === 'laptop' || userDevice === 'l' ? console.log(`Choices:\nComputer: ${computerChoice}\nPlayer: ${playerChoice}`)
             : alert(`Choices:\nComputer: ${computerChoice}\nPlayer: ${playerChoice}`);
           };
-        const displayScores = () => userDevice === 'laptop' ? console.log('Scores:\n', scores) : alert(`Scores:\n\tComputer: ${scores.computer}\n\tHuman: ${scores.player}`);
+        const displayScores = () => userDevice === 'laptop' || userDevice === 'l' ? console.log('Scores:\n', scores) : alert(`Scores:\n\tComputer: ${scores.computer}\n\tHuman: ${scores.player}`);
         const declareWinner = () => {
             const winnerMessage = scores.computer > scores.player ? interfaceMessages.computerWinMatch : interfaceMessages.playerWinMatch;
             displayMessage('Winner is!! Sound the drums');
@@ -51,7 +72,10 @@ const initiateGame = (function () {
             initiateGame();
         };
         const playGame = () => {
-            let userChoice = prompt('Choose your option (Rock, Paper, Scissors).')?.toLowerCase();
+            let userChoice = prompt('Choose your option (Rock, Paper, Scissors) or user (R, P, S).')?.toLowerCase();
+            userChoice === 'r' ? userChoice = 'rock' : userChoice === 's' 
+            ? userChoice = 'scissors' : userChoice === 'p' 
+            ? userChoice = 'paper' : userChoice = userChoice;
             if (!userChoice) {
                 displayMessage(interfaceMessages.cannotForfeit);
                 const quit = confirm(`Unless you really want to quit :( don't make the AI cry.` +
@@ -60,12 +84,9 @@ const initiateGame = (function () {
             }
             if (!validChoices.includes(userChoice)) {
                 if (userChoice === undefined) return playGame();
-                // instead try to correct
-                // if one of the strings have a levenshtein distance of 2 or less with
-                // one of the options confirm it with the user and assign it
-                const potentialOption = validChoices.filter((choice) => calculateLevenshteinDistance(choice, userChoice) < 2)[0];
+                const potentialOption = validChoices.filter((choice) => (calculateLevenshteinDistance(choice, userChoice) < 2))[0];
                 let confirmation;
-                if (potentialOption !== undefined ) {
+                if (potentialOption !== undefined && userChoice.length > 1 ) {
                     confirmation = confirm(`I think you meant ${potentialOption} correct`);
                     if (confirmation) userChoice = potentialOption;
                 }
@@ -74,8 +95,10 @@ const initiateGame = (function () {
                     return playGame();
                 }
             }
-            const computerChoice = computerRandomChoice();
-            // set scores
+            let computerChoice = computerRandomChoice();
+            computerChoice === 'r' ? computerChoice = 'rock' : computerChoice === 's' 
+            ? computerChoice = 'scissors' : computerChoice === 'p' 
+            ? computerChoice = 'paper' : computerChoice = computerChoice;
             if (userChoice === computerChoice) {
                 displayMessage(interfaceMessages.draw);
             } else if (choiceWinnerMap[userChoice] === computerChoice) {
@@ -87,7 +110,6 @@ const initiateGame = (function () {
             }
             displayChoices(computerChoice, userChoice);
             displayScores();
-            // check scores
             if (scores.computer + scores.player === 5) {
                 declareWinner();
                 return
@@ -97,12 +119,11 @@ const initiateGame = (function () {
         const initiateGame = () => {
             scores.computer = 0;
             scores.player = 0;
-            if (userDevice === 'laptop' && askedIndicator === false) return laptopInstructionsProvider();
-            if(askedIndicator === true || userDevice !== 'laptop') {
-                // ask the user to play
+            if ((userDevice === 'laptop' || userDevice === 'l') && askedIndicator === false) return laptopInstructionsProvider();
+            if(askedIndicator === true || (userDevice !== 'laptop' && userDevice !== 'l')) {
                 const startGame = confirm(interfaceMessages.requestGame);
                 if (startGame) return playGame();
-                if (userDevice === 'laptop') alert(`You can always try to conquer me again using initiateGame()`);
+                if (userDevice === 'laptop' || userDevice === 'l') alert(`You can always try to conquer me again using initiateGame()`);
             }
         }
         initiateGame();
