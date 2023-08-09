@@ -93,10 +93,9 @@ const game = (function () {
         } else if (result.message.includes("mean")) {
           const similarChoiceConfirmation = confirm(result.message);
           if (similarChoiceConfirmation) {
-            let correctedChoice = result.correctedChoice;
-            playerSelection = correctedChoice
-            if (correctedChoice) {
-              result = playRound(correctedChoice, computerSelection);
+            playerSelection = result.correctedChoice
+            if (playerSelection) {
+              result = playRound(playerSelection, computerSelection);
               console.log(result.message);
               if (result.message.includes("win")) {
                 playerScore++;
@@ -106,10 +105,9 @@ const game = (function () {
                 round++;
               }
             }
+            playerSelection = ""
           }
         }
-        correctedChoice = ""
-        playerSelection = ""
         console.log("Computer score:", computerScore, "\nYour score:", playerScore);
       }
       if (!(round < 6)) {
