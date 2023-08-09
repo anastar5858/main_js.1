@@ -68,9 +68,7 @@ const game = (function () {
     function mainGame() {
       let playerScore = 0;
       let computerScore = 0;
-      let round = 1;
-      console.log("Get 5 score and finish the game.");
-  
+      let round = 1;  
       while (round < 6) {
         let playerSelection = prompt(
           `Round ${round}: Enter your choice: Rock, Paper, or Scissors`
@@ -95,7 +93,7 @@ const game = (function () {
         } else if (result.message.includes("mean")) {
           const similarChoiceConfirmation = confirm(result.message);
           if (similarChoiceConfirmation) {
-            const correctedChoice = result.correctedChoice;
+            let correctedChoice = result.correctedChoice;
             playerSelection = correctedChoice
             if (correctedChoice) {
               result = playRound(correctedChoice, computerSelection);
@@ -110,6 +108,8 @@ const game = (function () {
             }
           }
         }
+        correctedChoice = ""
+        playerSelection = ""
         console.log("Computer score:", computerScore, "\nYour score:", playerScore);
       }
       if (!(round < 6)) {
