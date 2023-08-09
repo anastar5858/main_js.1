@@ -72,7 +72,7 @@ const initiateGame = (function () {
             initiateGame();
         };
         const playGame = () => {
-            let userChoice = prompt('Choose your option (Rock, Paper, Scissors) or user (R, P, S).')?.toLowerCase();
+            let userChoice = prompt('Choose your option (Rock, Paper, Scissors) or user (R, P, S).')?.toLowerCase().trim();
             userChoice === 'r' ? userChoice = 'rock' : userChoice === 's' 
             ? userChoice = 'scissors' : userChoice === 'p' 
             ? userChoice = 'paper' : userChoice = userChoice;
