@@ -1,5 +1,5 @@
 const initiateGame = (function () {
-    let userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase();
+    let userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase().trim();
     let askedIndicator = false;
     // https://dirask.com/posts/JavaScript-calculate-Levenshtein-distance-between-strings-pJ3krj
     const calculateLevenshteinDistance = (a, b) => {
@@ -29,7 +29,7 @@ const initiateGame = (function () {
     };
     return mainGame = () => {
         if ((userDevice !== 'laptop' && userDevice !== 'l') && (userDevice !== 'phone' && userDevice !== 'p')) {
-            userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase();
+            userDevice = prompt(`Are you on a phone (P) or laptop (L)?`)?.toLowerCase().trim();
             mainGame()
             return
         }
