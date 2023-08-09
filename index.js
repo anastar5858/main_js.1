@@ -76,14 +76,14 @@ const initiateGame = (function () {
             userChoice === 'r' ? userChoice = 'rock' : userChoice === 's' 
             ? userChoice = 'scissors' : userChoice === 'p' 
             ? userChoice = 'paper' : userChoice = userChoice;
-            if (!userChoice) {
+            if (userChoice === undefined) {
                 displayMessage(interfaceMessages.cannotForfeit);
                 const quit = confirm(`Unless you really want to quit :( don't make the AI cry.` +
                 `You'll have to reload or manually restart haha`);
                 if (quit) return;
             }
             if (!validChoices.includes(userChoice)) {
-                if (userChoice === undefined) return playGame();
+                if (!userChoice) return playGame();
                 const potentialOption = validChoices.filter((choice) => (calculateLevenshteinDistance(choice, userChoice) < 2))[0];
                 let confirmation;
                 if (potentialOption !== undefined && userChoice.length > 1 ) {
